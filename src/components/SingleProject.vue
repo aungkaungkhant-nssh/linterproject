@@ -1,5 +1,5 @@
 <template>
-  <div class="project">
+  <div class="project" :class="{complete:project.complete}">
       <div class="flexing">
           <div>
             <h3 @click="showDetail">{{project.title}}</h3>
@@ -13,7 +13,7 @@
          <span class="material-icons">
             edit
             </span>
-            <span class="material-icons">
+            <span class="material-icons" @click="completeProject">
                 done
             </span>
          </div>
@@ -45,6 +45,24 @@ export default {
                 console.log(err);
             })
            
+        },
+        completeProject(){
+             let completeRoute=this.api+this.project.id;
+            fetch(completeRoute,{
+                method:"PATCH",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    complete:!this.project.complete,
+                })
+                })
+                .then(()=>{
+                    this.$emit("complete",this.project.id);
+                })
+                .catch(()=>{
+
+                })
         }
     }
 }
@@ -75,5 +93,8 @@ export default {
     }
     span:hover{
         color:#ccc
+    }
+    .complete{
+         border-left: 6px solid green;
     }
 </style>
